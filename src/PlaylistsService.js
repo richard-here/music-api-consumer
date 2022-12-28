@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { mapPlaylistWithSongsDBToModel } = require('./utils/mapper');
+const mapPlaylistWithSongsDBToModel = require('./utils/mapper');
 const NotFoundError = require('./exceptions/NotFoundError');
 
 class PlaylistsService {
@@ -9,7 +9,7 @@ class PlaylistsService {
 
   async getPlaylistWithSongs({ playlistId }) {
     const query = {
-      text: `SELECT P.id, P.namem JSON_AGG(JSON_BUILD_OBJECT('id', S.id, 'title', S.title, 'performer', S.performer)) AS songs FROM playlists P
+      text: `SELECT P.id, P.name, JSON_AGG(JSON_BUILD_OBJECT('id', S.id, 'title', S.title, 'performer', S.performer)) AS songs FROM playlists P
         LEFT JOIN users U ON U.id = P.owner
         LEFT JOIN playlists_songs PS ON PS.playlist_id = P.id
         LEFT JOIN songs S ON PS.song_id = S.id
